@@ -3,8 +3,10 @@
 from httplib2 import Http
 import urllib2
 import json
-my_mail = ""
-my_pass = ""
+my_mail = raw_input("Mail: ")
+my_pass = raw_input("Pass: ")
+# my_mail = ""
+# my_pass = ""
 data = {
         'email':my_mail,
         'password':my_pass
@@ -27,10 +29,20 @@ print token
 
 
 #got the token, ask for info
-# url_account_info = 'http://app.comunia.me/api/v1/account'
+url_account_info = 'http://app.comunia.me/api/v1/account'
+req = urllib2.Request(url_account_info)
+req.add_header("Authorization", "Bearer %s" %token)
+response = urllib2.urlopen(req)
+json_obj = json.loads(response.read())
+
+
+# print json.dumps(json_obj["data"], indent=5, sort_keys=True)
+league_id =json_obj["data"]["leagues"][0]["id"]
+# print json.dumps(json_obj["data"]["leagues"][0]["id"], indent=5, sort_keys=True)
+
 #to get home:
-url_account_info = 'http://app.comunia.me/api/v1/home'
-#to get market:
+# url_account_info = 'http://app.comunia.me/api/v1/home'
+# #to get market:
 url_account_info = 'http://app.comunia.me/api/v1/market'
 
 req = urllib2.Request(url_account_info)
@@ -39,8 +51,9 @@ req.add_header("Authorization", "Bearer %s" %token)
 #Header not needed
 req.add_header("Referer", "http://app.comunia.me/market")
 
-#Needed for all but account call, DUNNO
-req.add_header("X-League", "154483")
+#Needed for all but account call, DUNNO, this is league_ID, at some point
+# will change
+req.add_header("X-League", league_id)
 print req
 response = urllib2.urlopen(req)
 html = response.read()
