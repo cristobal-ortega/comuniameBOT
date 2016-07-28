@@ -33,6 +33,19 @@ print "Going to ask market..."
 code,market = comuniame.getMarket(token,league_id)
 print code
 
+print "Getting players..."
+code,players = comuniame.getPlayers(token,league_id)
+print code
+print "Ranking: "
+for player in players:
+  print player.name + ":" + str(player.position)
+
+print "Getting news..."
+code,news = comuniame.getNews(token,league_id)
+print code
+print news
+
+
 # req = urllib2.Request(url)
 # req.add_header('Content-Type', 'application/json;charset=utf-8')
 # response = urllib2.urlopen(req,jsondata)
