@@ -1,2 +1,4 @@
 # tags from vim
 tags
+#tags python
+*.pyc
