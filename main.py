@@ -38,12 +38,26 @@ code,players = comuniame.getPlayers(token,league_id)
 print code
 print "Ranking: "
 for player in players:
-  print player.name + ":" + str(player.position)
+  print player.name + ":" + str(player.position) +":" + str(player.id)
 
 print "Getting news..."
 code,news = comuniame.getNews(token,league_id)
 print code
-print news
+last = len(news)
+n = news[last-2]
+print n.type
+print n.price
+print n.amount
+print n.fromID
+print n.toID
+print comuniame.idToName(n.toID,players)
+n = news[last-1]
+print n.type
+print n.price
+print n.amount
+print n.fromID
+print n.toID
+print comuniame.idToName(n.toID,players)
 
 
 # req = urllib2.Request(url)

@@ -19,6 +19,14 @@ class Player(object):
     points = 0
     teamValue = 0
 
+class New(object):
+    type = ""
+    price = 0
+    amount = 0
+    fromID = 0
+    toID = 0
+
+
 def callAPI(url, data, headers=[]):
     """Call to the API entry point
 
@@ -111,6 +119,48 @@ def getLeagueID(token):
     return code,league_id
 
 
+def idToName(id,players):
+    for player in players:
+        if id == player.id and id != 0:
+            return player.name
+    return UNKNOWN
+
+def readNews(new):
+    size = len(new["content"])
+    vectorNews = []
+    print "SIZE ",size
+    for i in range(0,size):
+        n = New()
+        n.type = new["type"]
+        print n.type
+        print new["content"]
+        if n.type == "roundStarted" or n.type == "roundPre" or n.type == "adminText" or n.type == "roundFinished" or n.type == "bonus"  or n.type == "text" or n.type == "userLeave":
+            print new["content"]
+            break;
+        if n.type == "leagueReset":
+            print new["content"]
+            return vectorNews,1;
+        if n.type == "playerMovements" or n.type == "market":
+            if "price" in new["content"][i]:
+                n.price = new["content"][i]["player"]["price"]
+                print n.price
+            if "amount" in new["content"][i]:
+                n.amount =  new["content"][i]["amount"]
+                print n.amount
+
+            if "to" in new["content"][i] and type(new["content"][i]["to"]) is not int:
+                print "to is in"
+                print new["content"][i]["to"]["id"]
+                n.toID = new["content"][i]["to"]["id"]
+                print n.toID
+            if "from" in new["content"][i] and type(new["content"][i]["from"]) is not int:
+                print "from is in"
+                print new["content"][i]["from"]["id"]
+                n.fromID = new["content"][i]["from"]["id"]
+                print n.fromID
+            vectorNews.append(n)
+    return vectorNews,0;
+
 def getNews(token, league_id):
     """Log in to Comuniame
 
@@ -129,13 +179,24 @@ def getNews(token, league_id):
                 ("X-League", league_id)
             ]
     i = 0;
-    urlOffset = endPoint.urlNews+"&offset="+str(i)
+    urlOffset = endPoint.urlNews
     code,ans = callAPI(urlOffset,"",header)
     if code != 200:
         return code,"Error"
     totalNews = ans["meta"]["list"]["total"]
     newsVector = []
     newSeason = False
+    for new in range(0,len(ans["data"])):
+        news,reset = readNews(ans["data"][new])
+        newsVector = newsVector + news
+        if reset:
+            newSeason = True
+    n = newsVector[0]
+    print n.type
+    print n.price
+    print n.amount
+    print n.fromID
+    print n.toID
     urlOffset = endPoint.urlNews+"&offset="+str(i)
     print urlOffset
     while ( i < totalNews and not newSeason ):
@@ -144,10 +205,19 @@ def getNews(token, league_id):
         urlOffset = endPoint.urlNews+"&offset="+str(i)
         print urlOffset
         code,ans = callAPI(urlOffset,"",header)
+        for new in range(0,len(ans["data"])):
+            news,reset = readNews(ans["data"][new])
+            newsVector = newsVector + news
+            if reset:
+                newSeason = True
         if code != 200:
             return code,"Error"
 
     #Ask news until arrive to new season
+    print len(newsVector)
+    ans = []
+    for i in reversed(newsVector):
+        ans.append(i)
     return code,ans
 
 def getMarket(token, league_id):
