@@ -2,6 +2,7 @@
 
 import urllib2
 import json
+import sys
 
 class endPoint:
     urlAuth = 'http://app.comunia.me/api/v3/auth/login'
@@ -18,14 +19,28 @@ class Player(object):
     position = 0
     points = 0
     teamValue = 0
+    money = 20000000
 
 class New(object):
     type = ""
+    name = ""
     price = 0
     amount = 0
     fromID = 0
     toID = 0
+    content = []
 
+jornadaPoints = []
+
+def updatePlayers(new, players):
+    print "Transaction for: ",new.name
+    print idToName(new.fromID,players) + " ---> " + idToName(new.toID,players) + ":" + str(new.amount)
+
+    for player in players:
+        if new.fromID == player.id:
+            player.money = player.money + new.amount
+        if new.toID == player.id:
+            player.money = player.money - new.amount
 
 def callAPI(url, data, headers=[]):
     """Call to the API entry point
@@ -120,30 +135,73 @@ def getLeagueID(token):
 
 
 def idToName(id,players):
+    if id == 0:
+        return "Mercado"
     for player in players:
         if id == player.id and id != 0:
             return player.name
-    return UNKNOWN
+    return "UNKNOWN"
 
 def readNews(new):
+    """Log in to Comuniame
+
+    Retrieves Bearer token to use it for protected calls.
+
+    Args:
+        email: email used as login in Comuniame
+        password: password used as password for the email
+
+    Returns:
+        Bearer token if successful
+        Error code Otherwise
+    """
     size = len(new["content"])
+    print new["content"]
     vectorNews = []
     print "SIZE ",size
     for i in range(0,size):
         n = New()
         n.type = new["type"]
         print n.type
-        print new["content"]
-        if n.type == "roundStarted" or n.type == "roundPre" or n.type == "adminText" or n.type == "roundFinished" or n.type == "bonus"  or n.type == "text" or n.type == "userLeave":
+        if n.type == "roundStarted" or n.type == "roundPre" or n.type == "adminText" or n.type == "text" or n.type == "userLeave" or n.type == "playerMovements":
             print new["content"]
             break;
         if n.type == "leagueReset":
             print new["content"]
             return vectorNews,1;
-        if n.type == "playerMovements" or n.type == "market":
-            if "price" in new["content"][i]:
-                n.price = new["content"][i]["player"]["price"]
-                print n.price
+        if n.type == "roundFinished":
+            continue
+            n.content = new["content"]
+            print n.content
+            jornada = new["content"]["round"]["label"]
+            if jornada in jornadaPoints:
+                continue
+            jornadaPoints.append(n.name)
+            for aux in range(0,len(n.content)):
+                n = New()
+                n.content = new["content"]["results"]
+                n.name = "BONUS " + new["content"]["round"]["label"]
+                n.fromID = n.content[aux]["user"]["id"]
+                n.amount = n.content[aux]["bonus"]
+                vectorNews.append(n)
+            break
+        if n.type == "bonus":
+            for aux in range(0,len(n.content)):
+                n = New()
+                n.content = new["content"][i]
+                n.name = "BONUS"
+                n.amount = new["content"][aux]["amount"]
+                n.fromID = new["content"][aux]["user"]["id"]
+                vectorNews.append(n)
+            # sys.exit()
+        if n.type == "market" or n.type == "transfer":
+            n.content = new["content"][i]
+            # if "name" in new["content"][i]["player"]:
+            n.name = new["content"][i]["player"]["name"]
+            print n.name
+            # if "price" in new["content"][i]["player"]:
+            n.price = new["content"][i]["player"]["price"]
+            print n.price
             if "amount" in new["content"][i]:
                 n.amount =  new["content"][i]["amount"]
                 print n.amount
@@ -260,6 +318,7 @@ def getPlayers(token, league_id):
         a.position = i
         a.points = player["points"]
         a.teamValue = player["teamValue"]
+        a.money = 20000000
         playerVector.append(a)
         i += 1
 

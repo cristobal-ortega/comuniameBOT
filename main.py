@@ -45,6 +45,10 @@ code,news = comuniame.getNews(token,league_id)
 print code
 last = len(news)
 n = news[last-2]
+
+for new in news:
+  comuniame.updatePlayers(new,players)
+
 print n.type
 print n.price
 print n.amount
@@ -58,6 +62,10 @@ print n.amount
 print n.fromID
 print n.toID
 print comuniame.idToName(n.toID,players)
+
+for player in players:
+  print player.name + ":" + str(player.position) +":" + str(player.id)+":"+str(player.money)
+
 
 
 # req = urllib2.Request(url)

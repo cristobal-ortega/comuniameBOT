@@ -1,0 +1,18 @@
+Login...
+Successful
+Asking for actual league id...
+{"status": 200, "data": {"leagues": [{"scoreID": 1, "name": "Keep Calm and Abrubru", "premiumPrice": [19.99, "\u20ac"], "created": 1443346362, "user": {"status": {"offers": 3, "balance": 2488135, "points": 113, "bids": 2}, "group": "", "name": "Cristovalikoh", "type": "normal", "id": 640144, "icon": "icons/19.png"}, "settings": {"jackpot": 0, "immediateSales": 0, "isOpen": 1, "lineupReserves": false, "lineupAllowExtra": false, "cancellationClause": 0, "secret": "mmH1DngL7d7j", "onlyAdminNews": 0, "balance": "hidden", "userOffers": "market"}, "competition": {"name": "La Liga", "scores": [{"decimal": false, "id": 1, "name": "Diario AS"}, {"decimal": false, "id": 2, "name": "Estad\u00edsticas"}, {"decimal": true, "id": 3, "name": "F\u00fatbolFantasy"}], "currency": "\u20ac", "social": {"twitter": "comuniame", "facebook": "comuniame", "instagram": "comuniameoficial"}, "type": "league", "slug": "la-liga"}, "mode": "normal", "type": "normal", "id": 154483, "icon": "icons/7.png"}], "account": {"created": 1443346391, "checked": 1, "id": 667310, "email": "cristo7.92@gmail.com"}, "version": 385, "ads": {"mobile_tendencias_300x100": false, "mobile_tendencias_roba_BD": false, "futbol_tendencias_mega_BD": true}}}
+200
+Going to ask market...
+200
+Getting players...
+200
+Ranking: 
+KarlMoloneMonchi:1:640134
+Pero esto no va de atrapar pokemons?:2:640139
+Cristovalikoh:3:640144
+Showben el humilde 1v8:4:1204209
+Anton Peludo:5:640133
+Nombre Provisional:6:640135
+Furioso:7:640138
+Pozo con canciones de Sancho:8:640140
