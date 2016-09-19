@@ -8,8 +8,8 @@ import getpass
 
 my_mail = raw_input("Mail: ")
 my_pass = getpass.getpass("Pass: ")
-# my_mail = ""
-# my_pass = ""
+my_mail = ""
+my_pass = ""
 data = {
         'email':my_mail,
         'password':my_pass
@@ -65,6 +65,12 @@ print comuniame.idToName(n.toID,players)
 
 for player in players:
   print player.name + ":" + str(player.position) +":" + str(player.id)+":"+str(player.money)
+
+
+print "---------------------------"
+
+comuniame.printNews(news,players)
+print str(len(news))
 
 
 

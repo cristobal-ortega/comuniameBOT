@@ -32,6 +32,17 @@ class New(object):
 
 jornadaPoints = []
 
+def printNews(news, players):
+    for new in news:
+        if new.type == "transfer":
+            print "TRANSFER for: ", new.name
+            print idToName(new.fromID,players) + " ---> " + idToName(new.toID,players) + ":" + str(new.amount)
+        if new.type == "market":
+            print "MARKET for: ", new.name
+            print idToName(new.fromID,players) + " ---> " + idToName(new.toID,players) + ":" + str(new.amount)
+
+
+
 def updatePlayers(new, players):
     print "Transaction for: ",new.name
     print idToName(new.fromID,players) + " ---> " + idToName(new.toID,players) + ":" + str(new.amount)
@@ -163,7 +174,7 @@ def readNews(new):
         n = New()
         n.type = new["type"]
         print n.type
-        if n.type == "roundStarted" or n.type == "roundPre" or n.type == "adminText" or n.type == "text" or n.type == "userLeave" or n.type == "playerMovements":
+        if n.type == "roundStarted" or n.type == "roundPre" or n.type == "adminText" or n.type == "text" or n.type == "userLeave" or n.type == "playerMovements" or n.type == "roundFinished":
             print new["content"]
             break;
         if n.type == "leagueReset":
@@ -276,7 +287,7 @@ def getNews(token, league_id):
     ans = []
     for i in reversed(newsVector):
         ans.append(i)
-    return code,ans
+    return code,newsVector
 
 def getMarket(token, league_id):
     """Log in to Comuniame
